@@ -107,6 +107,7 @@ data BuildPlan = BuildPlan
     , bpTools       :: Vector (PackageName, Version)
     , bpPackages    :: Map PackageName PackagePlan
     , bpGithubUsers :: Map Text (Set Text)
+    , bpAllowedModuleClashes :: Maybe (Map Text (Set PackageName))
     }
     deriving (Show, Eq)
 
