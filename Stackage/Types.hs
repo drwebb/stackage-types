@@ -129,6 +129,7 @@ instance ToJSON BuildPlan where
         , "tools" .= fmap goTool bpTools
         , "packages" .= Map.mapKeysWith const unPackageName bpPackages
         , "github-users" .= bpGithubUsers
+        , "allowed-module-clashes" .= (fmap (Map.map (Set.map unPackageName)) bpAllowedModuleClashes)
         ]
       where
         goTool (k, v) = object
@@ -141,6 +142,7 @@ instance FromJSON BuildPlan where
         bpTools <- (o .: "tools") >>= T.mapM goTool
         bpPackages <- Map.mapKeysWith const mkPackageName <$> (o .: "packages")
         bpGithubUsers <- o .:? "github-users" .!= mempty
+        bpAllowedModuleClashes <- Map.map mkPackageName <$> (o .: "allowed-moudle-clashes")
         return BuildPlan {..}
       where
         goTool = withObject "Tool" $ \o -> (,)
